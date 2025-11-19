@@ -69,13 +69,6 @@ import {
   SubjectReportsShow,
 } from "./pages/reports/subjects"
 
-import {
-  AttendanceCreate,
-  AttendanceEdit,
-  AttendanceList,
-  AttendanceShow
-} from "./pages/attendances"
-
 const StickyHeader = () => <Header sticky />;
 
 function App() {
@@ -170,13 +163,6 @@ function App() {
                       <Route path="show/:id" element={<SubjectGradesShow />} />
                     </Route>
                     <Route path="*" element={<ErrorComponent />} />
-                  </Route>
-
-                  <Route path="/attendances">
-                    <Route index element={<AttendanceList />} />
-                    <Route path="create" element={<AttendanceCreate />} />
-                    <Route path="edit/:id" element={<AttendanceEdit />} />
-                    <Route path="show/:id" element={<AttendanceShow />} />
                   </Route>
                   
                 </Routes>
