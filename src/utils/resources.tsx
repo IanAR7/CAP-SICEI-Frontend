@@ -7,8 +7,10 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
-export const resources: IResourceItem[] = [  
+export const resources: IResourceItem[] = [
     {
         name: "students",
         list: "/students",
@@ -109,6 +111,18 @@ export const resources: IResourceItem[] = [
         canDelete: true,
         icon: <EventAvailableIcon />,
         label: "Attendances",
+        },
+    },
+    {
+        name: "alerts",
+        list: "/alerts",
+        create: "/alerts/create",
+        edit: "/alerts/edit/:id",
+        show: "/alerts/show/:id",
+        meta: {
+            canDelete: true,
+            icon: <NotificationsActiveIcon />,
+            label: "Alerts & Notifications",
         },
     },
 ]

@@ -1,6 +1,7 @@
 import { Box, TextField, MenuItem, Select, InputLabel, FormControl, FormHelperText } from "@mui/material";
 import { Create } from "@refinedev/mui";
-import { useForm, Controller } from "@refinedev/react-hook-form";
+import { useForm } from "@refinedev/react-hook-form";
+import { Controller } from "react-hook-form";
 import { useCustom } from "@refinedev/core";
 import { Student } from "../../interfaces/student_interface";
 import { Subject } from "../../interfaces/subject_interface";
@@ -63,7 +64,7 @@ export const AttendanceCreate = () => {
             )}
           />
           {errors.student_id && (
-            <FormHelperText>{errors.student_id.message}</FormHelperText>
+            <FormHelperText>{errors.student_id.message as string}</FormHelperText>
           )}
         </FormControl>
 
@@ -88,7 +89,7 @@ export const AttendanceCreate = () => {
             )}
           />
           {errors.subject_id && (
-            <FormHelperText>{errors.subject_id.message}</FormHelperText>
+            <FormHelperText>{errors.subject_id.message as string}</FormHelperText>
           )}
         </FormControl>
 
@@ -126,7 +127,7 @@ export const AttendanceCreate = () => {
             )}
           />
           {errors.status && (
-            <FormHelperText>{errors.status.message}</FormHelperText>
+            <FormHelperText>{errors.status.message as string}</FormHelperText>
           )}
         </FormControl>
 
