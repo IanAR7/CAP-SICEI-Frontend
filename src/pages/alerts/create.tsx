@@ -56,7 +56,7 @@ export const AlertCreate = () => {
                     label="Title"
                     name="title"
                 />
-                
+
                 <TextField
                     {...register("message", {
                         required: "This field is required",
@@ -141,9 +141,9 @@ export const AlertCreate = () => {
                                 )}
                             >
                                 {/* Aquí deberías cargar destinatarios desde la API */}
-                                <MenuItem value="parent1@example.com">Parent 1</MenuItem>
-                                <MenuItem value="parent2@example.com">Parent 2</MenuItem>
-                                <MenuItem value="teacher1@example.com">Teacher 1</MenuItem>
+                                <MenuItem value="A21216381@alumnos.uady.mx">José Puc</MenuItem>
+                                <MenuItem value="A21216398@alumnos.uady.mx">Jonathan</MenuItem>
+                                <MenuItem value="+528871031029">Numero Jose</MenuItem>
                             </Select>
                         </FormControl>
                     )}
