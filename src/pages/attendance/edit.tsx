@@ -1,6 +1,7 @@
 import { Box, TextField, MenuItem, Select, InputLabel, FormControl, FormHelperText } from "@mui/material";
 import { Edit } from "@refinedev/mui";
-import { useForm, Controller } from "@refinedev/react-hook-form";
+import { useForm } from "@refinedev/react-hook-form";
+import { Controller } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { UpdateAttendance } from "../../interfaces/attendance_interface";
 
@@ -59,7 +60,7 @@ export const AttendanceEdit = () => {
             )}
           />
           {errors.status && (
-            <FormHelperText>{errors.status.message}</FormHelperText>
+            <FormHelperText>{errors.status.message as string}</FormHelperText>
           )}
         </FormControl>
 

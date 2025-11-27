@@ -75,7 +75,7 @@ import {
   AttendanceEdit,
   AttendanceList,
   AttendanceShow
-} from "./pages/attendances"
+} from "./pages/attendance"
 
 import { AlertList } from "./pages/alerts/list";
 import { AlertCreate } from "./pages/alerts/create";
@@ -178,7 +178,6 @@ function App() {
                     <Route path="show/:id" element={<SubjectGradesShow />} />
                   </Route>
                   <Route path="*" element={<ErrorComponent />} />
-                </Route>
 
                 <Route path="/attendances">
                   <Route index element={<AttendanceList />} />
@@ -192,6 +191,7 @@ function App() {
                   <Route path="create" element={<AlertCreate />} />
                   <Route path="edit/:id" element={<AlertEdit />} />
                   <Route path="show/:id" element={<AlertShow />} />
+                </Route>
                 </Route>
 
               </Routes>

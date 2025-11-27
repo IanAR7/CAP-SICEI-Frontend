@@ -10,7 +10,7 @@ import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
-export const resources: IResourceItem[] = [  
+export const resources: IResourceItem[] = [
     {
         name: "students",
         list: "/students",
