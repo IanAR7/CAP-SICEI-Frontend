@@ -179,19 +179,19 @@ function App() {
                   </Route>
                   <Route path="*" element={<ErrorComponent />} />
 
-                <Route path="/attendances">
-                  <Route index element={<AttendanceList />} />
-                  <Route path="create" element={<AttendanceCreate />} />
-                  <Route path="edit/:id" element={<AttendanceEdit />} />
-                  <Route path="show/:id" element={<AttendanceShow />} />
-                </Route>
+                  <Route path="/attendances">
+                    <Route index element={<AttendanceList />} />
+                    <Route path="create" element={<AttendanceCreate />} />
+                    <Route path="edit/:id" element={<AttendanceEdit />} />
+                    <Route path="show/:id" element={<AttendanceShow />} />
+                  </Route>
 
-                <Route path="/alerts">
-                  <Route index element={<AlertList />} />
-                  <Route path="create" element={<AlertCreate />} />
-                  <Route path="edit/:id" element={<AlertEdit />} />
-                  <Route path="show/:id" element={<AlertShow />} />
-                </Route>
+                  <Route path="/alerts">
+                    <Route index element={<AlertList />} />
+                    <Route path="create" element={<AlertCreate />} />
+                    <Route path="edit/:id" element={<AlertEdit />} />
+                    <Route path="show/:id" element={<AlertShow />} />
+                  </Route>
                 </Route>
 
               </Routes>
