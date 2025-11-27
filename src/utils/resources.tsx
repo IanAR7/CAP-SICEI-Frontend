@@ -6,6 +6,7 @@ import GradingIcon from '@mui/icons-material/Grading';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import SummarizeIcon from '@mui/icons-material/Summarize';
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 
 export const resources: IResourceItem[] = [  
     {
@@ -96,6 +97,18 @@ export const resources: IResourceItem[] = [
             canDelete: false,
             icon: <SummarizeIcon />,
             label: "Subjects",
+        },
+    },
+    {
+    name: "attendances",
+    list: "/attendances",
+    create: "/attendances/create",
+    edit: "/attendances/edit/:id",
+    show: "/attendances/show/:id",
+    meta: {
+        canDelete: true,
+        icon: <EventAvailableIcon />,
+        label: "Attendances",
         },
     },
 ]
