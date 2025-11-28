@@ -81,6 +81,7 @@ import { AlertList } from "./pages/alerts/list";
 import { AlertCreate } from "./pages/alerts/create";
 import { AlertEdit } from "./pages/alerts/edit";
 import { AlertShow } from "./pages/alerts/show";
+import { PredictionReportsList } from "./pages/prediction/list";
 
 
 
@@ -134,6 +135,7 @@ function App() {
                     <Route path="create" element={<StudentCreate />} />
                     <Route path="edit/:id" element={<StudentEdit />} />
                     <Route path="show/:id" element={<StudentShow />} />
+                    
                   </Route>
 
                   <Route path="/subjects">
@@ -192,6 +194,11 @@ function App() {
                     <Route path="edit/:id" element={<AlertEdit />} />
                     <Route path="show/:id" element={<AlertShow />} />
                   </Route>
+
+                  <Route path="/prediction">
+                   <Route index element={<PredictionReportsList />} />
+                   </Route>
+
                 </Route>
 
               </Routes>

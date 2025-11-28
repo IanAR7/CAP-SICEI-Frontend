@@ -14,6 +14,7 @@ const resourceToAPIPath: Record<string, string> = {
   "grades-subjects": "grades/subjects",
   "reports-students": "reports/students",
   "reports-subjects": "grades/subjects",
+  "risk-students": "prediction",
 }
 
 export const customDataProvider: DataProvider = {

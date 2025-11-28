@@ -125,4 +125,13 @@ export const resources: IResourceItem[] = [
             label: "Alerts & Notifications",
         },
     },
+    {
+    name: "prediction",
+    list: "/prediction",
+    meta: {
+        canDelete: false,
+        icon: <AssessmentIcon />, 
+        label: "Risk Prediction",
+    },
+},
 ]
