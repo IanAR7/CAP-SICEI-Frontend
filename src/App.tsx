@@ -36,6 +36,13 @@ import {
 } from "./pages/students"
 
 import {
+  ProfessorCreate,
+  ProfessorEdit,
+  ProfessorList,
+  ProfessorShow
+} from "./pages/professors"
+
+import {
   SubjectCreate,
   SubjectEdit,
   SubjectList,
@@ -77,12 +84,12 @@ import {
   AttendanceShow
 } from "./pages/attendance"
 
-import { AlertList } from "./pages/alerts/list";
-import { AlertCreate } from "./pages/alerts/create";
-import { AlertEdit } from "./pages/alerts/edit";
-import { AlertShow } from "./pages/alerts/show";
-
-
+import {
+  AlertList,
+  AlertCreate,
+  AlertEdit,
+  AlertShow
+} from "./pages/alerts"
 
 const StickyHeader = () => <Header sticky />;
 
@@ -134,6 +141,13 @@ function App() {
                     <Route path="create" element={<StudentCreate />} />
                     <Route path="edit/:id" element={<StudentEdit />} />
                     <Route path="show/:id" element={<StudentShow />} />
+                  </Route>
+
+                  <Route path="/professors">
+                    <Route index element={<ProfessorList />} />
+                    <Route path="create" element={<ProfessorCreate />} />
+                    <Route path="edit/:id" element={<ProfessorEdit />} />
+                    <Route path="show/:id" element={<ProfessorShow />} />
                   </Route>
 
                   <Route path="/subjects">

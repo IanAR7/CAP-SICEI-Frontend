@@ -4,4 +4,6 @@ export interface Subject {
     description?: string;
     credits: number;
     semester: number;
+    professor_id?: string | null;
+
 }

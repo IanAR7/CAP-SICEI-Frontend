@@ -1,6 +1,7 @@
 import { IResourceItem } from "@refinedev/core";
 
 import PersonIcon from '@mui/icons-material/Person';
+import Face6Icon from '@mui/icons-material/Face6';
 import SubjectIcon from '@mui/icons-material/Subject';
 import GradingIcon from '@mui/icons-material/Grading';
 import AssessmentIcon from '@mui/icons-material/Assessment';
@@ -22,6 +23,19 @@ export const resources: IResourceItem[] = [
             icon: <PersonIcon />,
         },
     },
+
+    {
+    name: "professors",
+    list: "/professors",
+    create: "/professors/create",
+    edit: "/professors/edit/:id",
+    show: "/professors/show/:id",
+    meta: {
+        canDelete: true,
+        icon: <Face6Icon />,
+       },
+    },
+
     {
         name: "subjects",
         list: "/subjects",
