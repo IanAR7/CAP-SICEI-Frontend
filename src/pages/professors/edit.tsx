@@ -4,7 +4,7 @@ import { useForm } from "@refinedev/react-hook-form";
 import { Controller } from "react-hook-form";
 import { useParams } from "react-router-dom";
 
-export const AlertEdit = () => {
+export const ProfessorEdit = () => {
   const { id } = useParams<{ id: string }>();
 
   const {
