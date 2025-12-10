@@ -1,12 +1,18 @@
-import { Box, TextField } from "@mui/material";
+import { Box, TextField, MenuItem } from "@mui/material";
 import { Create } from "@refinedev/mui";
 import { useForm } from "@refinedev/react-hook-form";
 
 import { Subject } from "../../interfaces/subject_interface";
+import { Professor } from "../../interfaces/professor_interface";
+
+import { getAllProfessors } from "../../api/api_professors";
+import { useEffect, useState } from "react";
 
 type FormValues = Omit<Subject, "id">;
 
 export const SubjectCreate = () => {
+  const [professors, setProfessors] = useState<Professor[]>([]);
+
 
   const {
     saveButtonProps,
@@ -19,6 +25,12 @@ export const SubjectCreate = () => {
       action: "create",
     },
   })
+  
+  useEffect(() => {
+    getAllProfessors()
+      .then((data) => setProfessors(data))
+      .catch((err) => console.error("Error loading professors:", err));
+  }, []);
 
   return (
     <Create isLoading={formLoading} saveButtonProps={saveButtonProps}>
@@ -88,6 +100,28 @@ export const SubjectCreate = () => {
           label="Semester"
           name="semester"
         />
+        <TextField
+          select
+          {...register("professor_id", {
+            required: "A professor is required",
+          })}
+          error={!!errors.professor_id}
+          helperText={errors.professor_id?.message || ""}
+          margin="normal"
+          fullWidth
+          slotProps={{ inputLabel: { shrink: true } }}
+          label="Assigned Professor"
+          name="professor_id"
+        >
+          <MenuItem value="">
+          </MenuItem>
+
+          {professors.map((p) => (
+            <MenuItem key={p.id} value={p.id}>
+              {p.first_name} {p.last_name}
+            </MenuItem>
+          ))}
+        </TextField>
       </Box>
     </Create>
   );
