@@ -17,6 +17,7 @@ export const SubjectEdit = () => {
   const {
     saveButtonProps,
     register,
+    watch,
     formState: { errors },
     refineCore: { formLoading },
   } = useForm<FormValues>({
@@ -26,6 +27,9 @@ export const SubjectEdit = () => {
       resource: "subjects",
     },
   });
+
+  const currentProfessorId = watch("professor_id");
+
 
   useEffect(() => {
     getAllProfessors()
@@ -98,6 +102,7 @@ export const SubjectEdit = () => {
           {...register("professor_id", {
             required: "A professor is required",
           })}
+          value={currentProfessorId || ""}
           error={!!errors.professor_id}
           helperText={errors.professor_id?.message || ""}
           margin="normal"
@@ -105,7 +110,8 @@ export const SubjectEdit = () => {
           slotProps={{ inputLabel: { shrink: true } }}
           label="Assigned Professor"
         >
-          <MenuItem value="">
+          <MenuItem value="" disabled>
+            <em>Select a professor</em>
           </MenuItem>
 
           {professors.map((p) => (
