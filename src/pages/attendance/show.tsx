@@ -1,13 +1,51 @@
-import { Stack, Typography, Chip } from "@mui/material";
-import { useShow } from "@refinedev/core";
-import { Show, TextFieldComponent as TextField } from "@refinedev/mui";
+import { Box, Typography, Chip, Stack } from "@mui/material";
+import { DataGrid, type GridColDef } from "@mui/x-data-grid";
+import { Show, EditButton } from "@refinedev/mui";
+import { useCustom } from "@refinedev/core";
+import React from "react";
+import { useParams } from "react-router-dom";
 import { Attendance } from "../../interfaces/attendance_interface";
+import { Student } from "../../interfaces/student_interface";
+import { Subject } from "../../interfaces/subject_interface";
 
 export const AttendanceShow = () => {
-  const { query } = useShow<Attendance>();
+  const { id } = useParams<{ id: string }>();
+  const [subjectId, dateStr] = id?.split('_') || ['', ''];
 
-  const { data, isLoading } = query;
-  const record = data?.data;
+  const { data: attendancesData, isLoading } = useCustom<Attendance[]>({
+    url: `attendances/subject/${subjectId}`,
+    method: "get",
+    config: { query: { date: dateStr } },
+  });
+
+  const { data: studentsData } = useCustom<Student[]>({
+    url: "students",
+    method: "get",
+  });
+
+  const { data: subjectData } = useCustom<Subject>({
+    url: `subjects/${subjectId}`,
+    method: "get",
+  });
+
+  const students = studentsData?.data || [];
+  const subject = subjectData?.data;
+  const attendances = attendancesData?.data || [];
+
+  const studentMap = React.useMemo(() => {
+    const map = new Map<string, Student>();
+    students.forEach(s => map.set(s.id, s));
+    return map;
+  }, [students]);
+
+  const enrichedAttendances = React.useMemo(() => {
+    return attendances.map(att => ({
+      ...att,
+      student_name: studentMap.get(att.student_id)
+        ? `${studentMap.get(att.student_id)!.name} ${studentMap.get(att.student_id)!.lastname}`
+        : `ID: ${att.student_id}`,
+    }));
+  }, [attendances, studentMap]);
 
   const statusColors = {
     present: "success",
@@ -16,54 +54,84 @@ export const AttendanceShow = () => {
     excused: "info",
   } as const;
 
-  return (
-    <Show isLoading={isLoading}>
-      <Stack gap={1}>
-        <Typography variant="body1" fontWeight="bold">
-          {"ID"}
-        </Typography>
-        <TextField value={record?.id} />
-
-        <Typography variant="body1" fontWeight="bold">
-          {"Student ID"}
-        </Typography>
-        <TextField value={record?.student_id} />
-
-        <Typography variant="body1" fontWeight="bold">
-          {"Subject ID"}
-        </Typography>
-        <TextField value={record?.subject_id} />
-
-        <Typography variant="body1" fontWeight="bold">
-          {"Date"}
-        </Typography>
-        <TextField value={record?.date ? new Date(record.date).toLocaleString() : ""} />
-
-        <Typography variant="body1" fontWeight="bold">
-          {"Status"}
-        </Typography>
-        {record?.status && (
+  const columns = React.useMemo<GridColDef[]>(
+    () => [
+      {
+        field: "student_id",
+        headerName: "Student ID",
+        width: 120,
+      },
+      {
+        field: "student_name",
+        headerName: "Student Name",
+        flex: 1,
+        minWidth: 200,
+      },
+      {
+        field: "status",
+        headerName: "Status",
+        width: 120,
+        renderCell: ({ value }) => (
           <Chip
-            label={record.status.toUpperCase()}
-            color={statusColors[record.status as keyof typeof statusColors]}
+            label={value.toUpperCase()}
+            color={statusColors[value as keyof typeof statusColors]}
+            size="small"
           />
-        )}
+        ),
+      },
+      {
+        field: "notes",
+        headerName: "Notes",
+        flex: 1,
+        minWidth: 200,
+        renderCell: ({ value }) => value || "-",
+      },
+      {
+        field: "actions",
+        headerName: "Actions",
+        align: "center",
+        headerAlign: "center",
+        width: 100,
+        sortable: false,
+        renderCell: ({ row }) => (
+          <EditButton
+            hideText
+            recordItemId={row.id}
+            resource="attendances"
+          />
+        ),
+      },
+    ],
+    []
+  );
 
-        <Typography variant="body1" fontWeight="bold">
-          {"Notes"}
-        </Typography>
-        <TextField value={record?.notes || "No notes"} />
-
-        <Typography variant="body1" fontWeight="bold">
-          {"Created At"}
-        </Typography>
-        <TextField value={record?.created_at ? new Date(record.created_at).toLocaleString() : ""} />
-
-        <Typography variant="body1" fontWeight="bold">
-          {"Updated At"}
-        </Typography>
-        <TextField value={record?.updated_at ? new Date(record.updated_at).toLocaleString() : ""} />
-      </Stack>
+  return (
+    <Show
+      isLoading={isLoading}
+      title={
+        <Stack spacing={1}>
+          <Typography variant="h5">
+            {subject?.name || "Loading..."}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {dateStr ? new Date(dateStr).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            }) : ""}
+          </Typography>
+        </Stack>
+      }
+    >
+      <Box sx={{ height: 600, width: '100%' }}>
+        <DataGrid
+          rows={enrichedAttendances}
+          columns={columns}
+          getRowId={(row) => row.id}
+          loading={isLoading}
+          disableRowSelectionOnClick
+        />
+      </Box>
     </Show>
   );
 };

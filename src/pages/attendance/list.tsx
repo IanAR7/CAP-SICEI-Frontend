@@ -1,107 +1,125 @@
-import { Chip } from "@mui/material";
+import { Box, Chip } from "@mui/material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
-import {
-  DeleteButton,
-  EditButton,
-  List,
-  ShowButton,
-  useDataGrid,
-} from "@refinedev/mui";
+import { List, ShowButton } from "@refinedev/mui";
 import React from "react";
-
-import { Attendance } from "../../interfaces/attendance_interface";
+import { useCustom } from "@refinedev/core";
+import { AttendanceSession } from "../../interfaces/attendance_interface";
+import { Subject } from "../../interfaces/subject_interface";
+import { getAttendanceSessions } from "../../api/api_attendance";
 
 export const AttendanceList = () => {
-  const { dataGridProps } = useDataGrid<Attendance>();
+  const [sessions, setSessions] = React.useState<AttendanceSession[]>([]);
+  const [loading, setLoading] = React.useState(true);
 
-  const statusColors = {
-    present: "success",
-    absent: "error",
-    late: "warning",
-    excused: "info",
-  } as const;
+  const { data: subjectsData } = useCustom<Subject[]>({
+    url: "subjects",
+    method: "get",
+  });
+
+  const subjects = subjectsData?.data || [];
+  const subjectMap = React.useMemo(() => {
+    const map = new Map<string, string>();
+    subjects.forEach(s => map.set(s.id, s.name));
+    return map;
+  }, [subjects]);
+
+  React.useEffect(() => {
+    getAttendanceSessions()
+      .then((data) => {
+        const enriched = data.map(session => ({
+          ...session,
+          subject_name: subjectMap.get(session.subject_id) || `ID: ${session.subject_id}`
+        }));
+        setSessions(enriched);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error(error);
+        setLoading(false);
+      });
+  }, [subjectMap]);
 
   const columns = React.useMemo<GridColDef[]>(
     () => [
       {
-        field: "id",
-        headerName: "ID",
-        type: "string",
-        minWidth: 100,
-        display: "flex",
-        align: "left",
-        headerAlign: "left",
-      },
-      {
-        field: "student_id",
+        field: "subject_name",
+        headerName: "Subject",
         flex: 1,
-        headerName: "Student ID",
-        minWidth: 150,
-        display: "flex",
-      },
-      {
-        field: "subject_id",
-        flex: 1,
-        headerName: "Subject ID",
-        minWidth: 150,
-        display: "flex",
+        minWidth: 200,
       },
       {
         field: "date",
-        flex: 1,
         headerName: "Date",
-        minWidth: 180,
-        display: "flex",
-        renderCell: function render({ value }) {
-          return new Date(value).toLocaleString();
-        },
-      },
-      {
-        field: "status",
-        headerName: "Status",
-        minWidth: 120,
-        display: "flex",
-        renderCell: function render({ value }) {
-          return (
-            <Chip 
-              label={value.toUpperCase()} 
-              color={statusColors[value as keyof typeof statusColors]}
-              size="small"
-            />
-          );
-        },
-      },
-      {
-        field: "notes",
         flex: 1,
-        headerName: "Notes",
-        minWidth: 200,
-        display: "flex",
-        renderCell: function render({ value }) {
-          return value || "-";
+        minWidth: 150,
+        renderCell: ({ value }) => {
+          return new Date(value).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          });
         },
+      },
+      {
+        field: "total_students",
+        headerName: "Total",
+        width: 100,
+        align: "center",
+        headerAlign: "center",
+      },
+      {
+        field: "present_count",
+        headerName: "Present",
+        width: 100,
+        align: "center",
+        headerAlign: "center",
+        renderCell: ({ value }) => (
+          <Chip label={value} color="success" size="small" />
+        ),
+      },
+      {
+        field: "absent_count",
+        headerName: "Absent",
+        width: 100,
+        align: "center",
+        headerAlign: "center",
+        renderCell: ({ value }) => (
+          <Chip label={value} color="error" size="small" />
+        ),
+      },
+      {
+        field: "late_count",
+        headerName: "Late",
+        width: 100,
+        align: "center",
+        headerAlign: "center",
+        renderCell: ({ value }) => (
+          <Chip label={value} color="warning" size="small" />
+        ),
+      },
+      {
+        field: "excused_count",
+        headerName: "Excused",
+        width: 100,
+        align: "center",
+        headerAlign: "center",
+        renderCell: ({ value }) => (
+          <Chip label={value} color="info" size="small" />
+        ),
       },
       {
         field: "actions",
         headerName: "Actions",
-        align: "right",
-        headerAlign: "right",
-        minWidth: 120,
+        align: "center",
+        headerAlign: "center",
+        width: 120,
         sortable: false,
-        display: "flex",
-        renderCell: function render({ row }) {
-          return (
-            <>
-              <EditButton hideText recordItemId={row.id} />
-              <ShowButton hideText recordItemId={row.id} />
-              <DeleteButton
-                hideText
-                recordItemId={row.id}
-                confirmTitle={`Are you sure you want to delete this attendance record?`}
-              />
-            </>
-          );
-        },
+        renderCell: ({ row }) => (
+          <ShowButton
+            hideText
+            recordItemId={`${row.subject_id}_${row.date}`}
+          />
+        ),
       },
     ],
     []
@@ -110,9 +128,10 @@ export const AttendanceList = () => {
   return (
     <List>
       <DataGrid
-        {...dataGridProps}
+        rows={sessions}
         columns={columns}
-        getRowId={(row) => row.id}
+        getRowId={(row) => `${row.subject_id}_${row.date}`}
+        loading={loading}
       />
     </List>
   );

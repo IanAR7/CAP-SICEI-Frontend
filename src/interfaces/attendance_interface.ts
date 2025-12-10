@@ -30,5 +30,34 @@ export interface AttendanceAnalytics {
     consecutive_absences: number;
 }
 
+export interface AttendanceSession {
+    subject_id: string;
+    subject_name: string;
+    date: string;
+    total_students: number;
+    present_count: number;
+    absent_count: number;
+    late_count: number;
+    excused_count: number;
+}
+
+export interface SessionStudentAttendance {
+    attendance_id: string;
+    student_id: string;
+    student_name: string;
+    status: "present" | "absent" | "late" | "excused";
+    notes?: string;
+}
+
+export interface CreateBulkAttendance {
+    subject_id: string;
+    date: string;
+    students: Array<{
+        student_id: string;
+        status: "present" | "absent" | "late" | "excused";
+        notes?: string;
+    }>;
+}
+
 export type CreateAttendance = Omit<Attendance, "id" | "created_at" | "updated_at">;
 export type UpdateAttendance = Partial<Pick<Attendance, "status" | "notes" | "date">>;
