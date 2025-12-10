@@ -20,7 +20,7 @@ export interface Alert {
   target_recipients: string[];
   created_by: string;
   created_at: string; 
-  scheduled_at?: string;
+  scheduled_at: string;
   sent_at?: string;
   extra_data?: Record<string, any>;
 }
