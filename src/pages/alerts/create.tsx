@@ -8,11 +8,12 @@ import {
   InputLabel,
   Select,
   OutlinedInput,
+  FormHelperText
 } from "@mui/material";
 import { useForm } from "@refinedev/react-hook-form";
 import { Controller } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { getAllStudents } from "../../api/api_students"; 
+import { getAllStudents } from "../../api/api_students";
 import { Student } from "../../interfaces/student_interface";
 
 export const AlertCreate = () => {
@@ -63,7 +64,7 @@ export const AlertCreate = () => {
         <TextField
           {...register("title", { required: "This field is required" })}
           error={!!errors.title}
-          helperText={errors.title?.message}
+          helperText={errors.title?.message === "string" ? errors.title.message : ""}
           label="Title"
           fullWidth
         />
@@ -72,7 +73,7 @@ export const AlertCreate = () => {
         <TextField
           {...register("message", { required: "This field is required" })}
           error={!!errors.message}
-          helperText={errors.message?.message}
+          helperText={errors.message?.message === "string" ? errors.message.message : ""}
           label="Message"
           fullWidth
           multiline
@@ -89,7 +90,7 @@ export const AlertCreate = () => {
               {...field}
               select
               error={!!errors.alert_type}
-              helperText={errors.alert_type?.message}
+              helperText={errors.alert_type?.message === "string" ? errors.alert_type.message : ""}
               label="Alert Type"
               fullWidth
             >
@@ -112,7 +113,7 @@ export const AlertCreate = () => {
               {...field}
               select
               error={!!errors.channel}
-              helperText={errors.channel?.message}
+              helperText={errors.channel?.message === "string" ? errors.channel.message : ""}
               label="Notification Channel"
               fullWidth
             >
@@ -131,28 +132,35 @@ export const AlertCreate = () => {
           name="target_recipients"
           rules={{ required: "This field is required" }}
           render={({ field }) => (
-            <FormControl fullWidth>
-              <InputLabel shrink>Recipients</InputLabel>
+            <FormControl fullWidth error={!!errors.target_recipients}>
+              <InputLabel id="recipients-label">Recipients</InputLabel>
               <Select
                 {...field}
+                labelId="recipients-label"
+                label="Recipients"
                 multiple
                 input={<OutlinedInput label="Recipients" />}
                 value={field.value || []}
                 onChange={(e) => field.onChange(e.target.value)}
                 renderValue={(selected) => (
                   <Box sx={{ display: "flex", gap: 0.5, flexWrap: "wrap" }}>
-                    {selected.map((email) => (
-                      <Chip key={email} label={email} />
+                    {selected.map((email: string) => (
+                      <Chip key={email} label={email} size="small" />
                     ))}
                   </Box>
                 )}
               >
                 {students.map((s) => (
                   <MenuItem key={s.id} value={s.email}>
-                    {s.first_name} {s.last_name} — {s.email}
+                    {s.name} {s.lastname} — {s.email}
                   </MenuItem>
                 ))}
               </Select>
+              {errors.target_recipients && (
+                <FormHelperText>
+                  {errors.target_recipients.message as string}
+                </FormHelperText>
+              )}
             </FormControl>
           )}
         />
@@ -163,6 +171,9 @@ export const AlertCreate = () => {
           type="datetime-local"
           label="Schedule For (Optional)"
           fullWidth
+          slotProps={{
+            inputLabel: { shrink: true },
+          }}
         />
 
         <input type="hidden" {...register("created_by")} value="admin001" />
