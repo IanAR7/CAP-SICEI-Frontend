@@ -2,15 +2,24 @@ import { Edit } from "@refinedev/mui";
 import { Box, TextField, MenuItem } from "@mui/material";
 import { useForm } from "@refinedev/react-hook-form";
 import { Controller } from "react-hook-form";
+import { useParams } from "react-router-dom";
 
-export const AlertEdit = () => {
+export const ProfessorEdit = () => {
+  const { id } = useParams<{ id: string }>();
+
   const {
     saveButtonProps,
     refineCore: { queryResult },
     register,
     control,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    refineCoreProps: {
+      action: "edit",
+      id,
+      resource: "alerts",
+    },
+  });
 
   const alertsData = queryResult?.data?.data;
 
@@ -29,18 +38,14 @@ export const AlertEdit = () => {
     { value: "both", label: "Both" },
   ];
 
-  // Función para convertir fecha ISO a formato datetime-local
   const formatForDateTimeLocal = (isoDate: string) => {
     if (!isoDate) return "";
 
     try {
       const date = new Date(isoDate);
 
-      // Verificar si la fecha es válida
       if (isNaN(date.getTime())) return "";
 
-      // Convertir a formato YYYY-MM-DDTHH:MM
-      // El método toISOString() devuelve UTC, así que usamos getUTC methods
       const year = date.getUTCFullYear();
       const month = String(date.getUTCMonth() + 1).padStart(2, "0");
       const day = String(date.getUTCDate()).padStart(2, "0");
@@ -158,19 +163,14 @@ export const AlertEdit = () => {
               name="scheduled_at"
               value={formatForDateTimeLocal(field.value) || ""}
               onChange={(e) => {
-                // Cuando el usuario selecciona una fecha, convertirla a formato ISO
                 if (e.target.value) {
-                  // Añadir segundos y zona horaria UTC
-                  const isoDate = new Date(
-                    e.target.value + ":00Z"
-                  ).toISOString();
+                  const isoDate = new Date(e.target.value + ":00Z").toISOString();
                   field.onChange(isoDate);
                 } else {
                   field.onChange(null);
                 }
               }}
               inputProps={{
-                step: 300, // 5 minutos en segundos (opcional)
               }}
             />
           )}
