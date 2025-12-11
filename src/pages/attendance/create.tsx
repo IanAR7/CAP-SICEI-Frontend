@@ -1,10 +1,10 @@
-import { 
-  Box, 
-  TextField, 
-  MenuItem, 
-  Select, 
-  InputLabel, 
-  FormControl, 
+import {
+  Box,
+  TextField,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
   FormHelperText,
   Table,
   TableBody,
@@ -72,13 +72,23 @@ export const AttendanceCreate = () => {
 
   React.useEffect(() => {
     if (selectedSubject && students.length > 0) {
-      const rows: StudentRow[] = students.map((s) => ({
-        student_id: s.id,
-        student_name: `${s.name} ${s.lastname}`,
-        status: "present",
-        notes: "",
-      }));
-      setStudentRows(rows);
+      const currentSubject = subjects.find(s => s.id === selectedSubject);
+
+      if (currentSubject) {
+
+        const filteredStudents = students.filter(
+            student => student.semester === currentSubject.semester
+        );
+
+        const rows: StudentRow[] = filteredStudents.map((s) => ({
+          student_id: s.id,
+          student_name: `${s.name} ${s.lastname}`,
+          status: "present",
+          notes: "",
+        }));
+
+        setStudentRows(rows);
+      }
     }
   }, [selectedSubject, students]);
 
