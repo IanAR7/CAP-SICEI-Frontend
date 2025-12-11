@@ -13,9 +13,8 @@ export const AttendanceShow = () => {
   const [subjectId, dateStr] = id?.split('_') || ['', ''];
 
   const { data: attendancesData, isLoading } = useCustom<Attendance[]>({
-    url: `attendances/subject/${subjectId}`,
+    url: `attendances/subject/${subjectId}?date=${dateStr}`,
     method: "get",
-    config: { query: { date: dateStr } },
   });
 
   const { data: studentsData } = useCustom<Student[]>({
